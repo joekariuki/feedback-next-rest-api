@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
   });
 
   let json_response = {
-    status: "success",
+    status: "SUCCESS",
     results: feedbacks.length,
     feedbacks,
   };
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     });
 
     let json_response = {
-      status: "success",
+      status: "SUCCESS",
       data: {
         feedback,
       },
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
   } catch (error: any) {
     if (error.code === "P2002") {
       let error_response = {
-        status: "fail",
+        status: "FAIL",
         message: "Feedback with the title already exists",
       };
 

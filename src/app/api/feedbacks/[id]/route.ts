@@ -33,3 +33,48 @@ export async function GET(
 
   return NextResponse.json(json_response);
 }
+
+export async function PATCH(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const id = params.id;
+    let json = await request.json();
+
+    const updated_feedback = await prisma.feedback.update({
+      where: { id },
+      data: json,
+    });
+
+    let json_response = {
+      status: "SUCCESS",
+      data: {
+        feedback: updated_feedback,
+      },
+    };
+    return NextResponse.json(json_response);
+  } catch (error: any) {
+    if (error.code === "P2025") {
+      let error_response = {
+        status: "FAIL",
+        message: "No Feedback with provided ID found",
+      };
+
+      return new NextResponse(JSON.stringify(error_response), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    let error_response = {
+      status: "ERROR",
+      message: error.message,
+    };
+
+    return new NextResponse(JSON.stringify(error_response), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+}
